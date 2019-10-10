@@ -101,3 +101,6 @@ LOCK
 LOG*
 CURRENT
 MANIFEST-*
+feature/VG/VG_resnet101_faster_rcnn_genome.tsv.0
+feature/VG/VG_gt_resnet101_faster_rcnn_genome.tsv.0
+feature/*
