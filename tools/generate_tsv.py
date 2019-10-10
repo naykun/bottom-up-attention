@@ -7,6 +7,10 @@
 
 
 # Example:
+
+# python ./tools/generate_tsv.py --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml --def models/vg/ResNet-101/faster_rcnn_end2end_final/test.prototxt --out feature/VG/VG_resnet101_faster_rcnn_genome.tsv --net data/faster_rcnn_models/resnet101_faster_rcnn_final.caffemodel --total_group 1 --group_id 0 --split genome
+
+
 # ./tools/generate_tsv.py --gpu 0,1,2,3,4,5,6,7 --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml --def models/vg/ResNet-101/faster_rcnn_end2end_final/test.prototxt --out test2014_resnet101_faster_rcnn_genome.tsv --net data/faster_rcnn_models/resnet101_faster_rcnn_final.caffemodel --split coco_test2014
 
 # ./tools/generate_tsv.py --gpu 0 --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml --def models/vg/ResNet-101/faster_rcnn_end2end_final/test.prototxt --out /coc/scratch/panderson43/tsv/nocaps/nocaps_val_resnet101_faster_rcnn_genome.tsv --net data/faster_rcnn_models/resnet101_faster_rcnn_final.caffemodel --split nocaps_val
@@ -20,6 +24,10 @@
 #./tools/generate_tsv.py --gpu 0 --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml --def models/vg/ResNet-101/faster_rcnn_end2end_final/test.prototxt --out /coc/scratch/panderson43/tsv/nocaps/nocaps_test_resnet101_faster_rcnn_genome.tsv.4 --net data/faster_rcnn_models/resnet101_faster_rcnn_final.caffemodel --split nocaps_test
 
 #./tools/generate_tsv.py --gpu 0,1,2,3 --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml --def models/vg/ResNet-101/faster_rcnn_end2end_final/test.prototxt --out /coc/scratch/panderson43/tsv/openimages/openimages_trainsubset_resnet101_faster_rcnn_genome.tsv --net data/faster_rcnn_models/resnet101_faster_rcnn_final.caffemodel --split openimages_missing
+BUTD_ROOT = '/opt/butd/'
+import os, sys
+sys.path.insert(0, BUTD_ROOT + "/tools")
+os.environ['GLOG_minloglevel'] = '2'
 
 import _init_paths
 from fast_rcnn.config import cfg, cfg_from_file
@@ -113,10 +121,10 @@ def load_image_ids(split_name, group_id, total_group, image_ids=None):
       else:
         split = split[int(group_id * per_num):int((group_id+1)*per_num)]
     elif split_name == 'genome':
-      with open('data/visgenome/image_data.json') as f:
+      with open('data/vg/image_data.json') as f:
         for item in json.load(f):
           image_id = int(item['image_id'])
-          filepath = os.path.join('data/visgenome/', item['url'].split('rak248/')[-1])
+          filepath = os.path.join('data/vg/', item['url'].split('rak248/')[-1])
           split.append((filepath,image_id))
 
       total_num = len(split)
