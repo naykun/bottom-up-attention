@@ -365,6 +365,7 @@ def load_image_ids(split_name, group_id, total_group, image_ids=None):
       data_root = '/app/data/VG_100K/VGdata_raw/scene_graphs.json'
       with open(data_root) as f:
         data = json.load(f)
+        data = [i for i in data if len(i['objects'])>0]
         max_num_box = max([len(i['objects']) for i in data])
         bbox = np.zeros([len(data), max_num_box, 5])
         num_bbox = np.zeros(len(data))
@@ -486,7 +487,7 @@ def generate_tsv(gpu_id, prototxt, weights, image_ids, bbox, num_bbox, outfile):
     else:
         print 'GPU {:d}: missing {:d}/{:d}'.format(gpu_id, len(missing), len(image_ids))
         print missing
-    
+    img_bad = {1629,2335,2482}
     if len(missing) > 0:
         caffe.set_mode_gpu()
         caffe.set_device(gpu_id)
@@ -497,7 +498,7 @@ def generate_tsv(gpu_id, prototxt, weights, image_ids, bbox, num_bbox, outfile):
             count = 0
             for ii, image in enumerate(image_ids):
                 im_file,image_id = image
-                if image_id in missing:
+                if image_id in missing and image_id not in img_bad:
                     im = cv2.imread(im_file)
                     # if im is not None and min(im.shape[:2])>=200 and im.shape[2]==3:
                     _t['misc'].tic()
